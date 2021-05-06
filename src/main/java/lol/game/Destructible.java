@@ -39,4 +39,12 @@ public abstract class Destructible {
   }
 
   public abstract void accept(TileVisitor visitor);
+
+  public int getInitialHP() {
+    return initialHP;
+  }
+
+  public int getCurrentHP() {
+    return currentHP;
+  }
 }

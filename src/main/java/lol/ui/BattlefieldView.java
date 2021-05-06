@@ -12,6 +12,8 @@ import javafx.scene.image.ImageView;
 import javafx.geometry.Pos;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Color;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
 
 import lol.game.*;
 
@@ -34,6 +36,7 @@ public class BattlefieldView implements TileVisitor
     this.battlefield = battlefield;
     this.stage = stage;
     sprites = new Sprites();
+    stage.setTitle("LOL 2D");
   }
 
   public void update() {
@@ -79,7 +82,28 @@ public class BattlefieldView implements TileVisitor
     StackPane stack = new StackPane();
     stack.getChildren().add(groundView(battlefield.groundAt(d.x(), d.y())));
     stack.getChildren().add(dView);
+    displayHealthBar(d,stack);
     tiles.getChildren().add(stack);
+  }
+
+  private void displayHealthBar(Destructible d,StackPane s) {
+    s.setAlignment(Pos.BOTTOM_CENTER);
+    ProgressBar healthBar = new ProgressBar(1);
+    double hpPercentage = (d.getCurrentHP())/(double)(d.getInitialHP());
+    if( hpPercentage <= 1.0 && hpPercentage >= 0.75 ) {
+      healthBar.setStyle("-fx-accent: green");
+    }
+    else if( hpPercentage < 0.75 && hpPercentage >= 0.5 ) {
+      healthBar.setStyle("-fx-accent: yellow");
+    }
+    else if( hpPercentage < 0.5 && hpPercentage >= 0.25 ) {
+      healthBar.setStyle("-fx-accent: orange");
+    }
+    else {
+      healthBar.setStyle("-fx-accent: red");
+    }
+    healthBar.setProgress(hpPercentage);
+    s.getChildren().add(healthBar);
   }
 
   @Override public void visitChampion(Champion champion) {
